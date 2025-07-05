@@ -225,22 +225,37 @@
         <plugin>
           <groupId>org.codehaus.cargo</groupId>
           <artifactId>cargo-maven3-plugin</artifactId>
-          <version>${cargo-maven3-plugin.version}</version>
-          <configuration>
-            <container>
-              <containerId>${cargo.maven.containerId}</containerId>
-              <zipUrlInstaller>
-                <url>${cargo.maven.containerUrl}</url>
-              </zipUrlInstaller>
-            </container>
-            <daemon>
-              <properties>
-                <cargo.daemon.url>http://localhost:18000</cargo.daemon.url>
-                <cargo.daemon.handleid>${project.artifactId}</cargo.daemon.handleid>
-              </properties>
-            </daemon>
-          </configuration>
-        </plugin>
+          <version>1.10.10</version>
+          <executions>
+          <execution>
+            <id>start-container</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>stop-container</id>
+            <phase>post-integration-test</phase>
+      <goals>
+        <goal>stop</goal>
+      </goals>
+    </execution>
+  </executions>
+  <configuration>
+    <container>
+      <containerId>tomcat9x</containerId>
+      <zipUrlInstaller>
+        <url>https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.70/bin/apache-tomcat-9.0.70.zip</url>
+      </zipUrlInstaller>
+    </container>
+    <configuration>
+      <properties>
+        <cargo.servlet.port>9090</cargo.servlet.port>
+      </properties>
+    </configuration>
+  </configuration>
+</plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -430,3 +445,4 @@
   </profiles>
 
 </project>
+
