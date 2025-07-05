@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'lingarajmantha/devopsapp:latest'
+        DOCKER_IMAGE = 'limantha091/devopsapp:latest'
         DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-creds'
     }
 
@@ -15,25 +15,32 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                sh 'mvn clean install'
+                dir('DevOps-Project-33/DevSecOps-CI-CD-Pipeline') {
+                    sh 'mvn clean install'
+                }
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE .'
+                dir('DevOps-Project-33/DevSecOps-CI-CD-Pipeline') {
+                    sh 'docker build -t limantha091/devopsapp:latest .'
+                }
             }
         }
 
         stage('Docker Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                        docker push $DOCKER_IMAGE
-                    '''
+                    dir('DevOps-Project-33/DevSecOps-CI-CD-Pipeline') {
+                        sh '''
+                            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                            docker push limantha091/devopsapp:latest
+                        '''
+                    }
                 }
             }
         }
     }
 }
+
